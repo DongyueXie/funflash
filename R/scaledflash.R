@@ -52,7 +52,7 @@ scaledflash = function(Y,
 
   for(k in 1:Kmax){
     res_old = res
-    Rk = get_Rk(Y,a,b,res$EL,res$EF)
+    Rk = get_Rk0(Y,a,b,res$EL,res$EF)
     if(verbose){
       print(paste("Fitting dimension ", k))
     }

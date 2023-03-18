@@ -13,9 +13,22 @@ init_fl = function(Y,init_fn){
   if(init_fn=='udv_random'){
     out = udv_random(Y,1)
   }
+  if(init_fn == 'nnmf_r1'){
+    out = nnmf_r1(Y,1)
+  }
 
   #out = do.call(init_fn,list(Y,1))
   out
+}
+
+nnmf_r1 = function(Y,K = 1){
+  res = NNLM::nnmf(Y,K,loss='mse',verbose = 0)
+  u = as.vector(res$W)
+  v = as.vector(res$H)
+  d = sum(v) * sum(u)
+  u = u/sum(u)
+  v = v/sum(v)
+  return(list(u=u,v=v,d=d))
 }
 
 init_fl_data = function(Y,init_fn,filter.number,family,type){

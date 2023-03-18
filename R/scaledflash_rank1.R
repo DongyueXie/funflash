@@ -22,15 +22,15 @@ scaledflash_rank1 = function(Rk,
   n = nrow(Rk)
   p = ncol(Rk)
   init = init_fl(Rk,init_fn)
-  El = init$u*sqrt(init$d[1])
-  Ef = init$v*sqrt(init$d[1])
+  El = init$u*sqrt(init$d[1])/a
+  Ef = init$v*sqrt(init$d[1])/b
   El2 = El^2
   Ef2 = Ef^2
   gl = list()
   gf = list()
   KL.l = 0
   KL.f = 0
-  res = update_res(res,k,El,El2,Ef,Ef2,gl,gf,KL.l,KL.l)
+  res = update_res(res,k,El,El2,Ef,Ef2,gl,gf,KL.l,KL.l,fe=0)
   sigma2 = res$sigma2
 
   obj = -Inf
@@ -58,7 +58,7 @@ scaledflash_rank1 = function(Rk,
     KL.l = fit.l$penloglik - NM_posterior_e_loglik(xl, sl,El, El2)
 
     if(sum(El2)==0){
-      res = update_res(res,k,El,El2,Ef,Ef2,gl,gf,KL.l,KL.f,sigma2)
+      res = update_res(res,k,El,El2,Ef,Ef2,gl,gf,KL.l,KL.f,sigma2,0)
       print('loading zeroed out')
       break
     }
@@ -73,12 +73,12 @@ scaledflash_rank1 = function(Rk,
     KL.f = fit.f$penloglik - NM_posterior_e_loglik(xf, sf,Ef, Ef2)
 
     if(sum(Ef2)==0){
-      res = update_res(res,k,El,El2,Ef,Ef2,gl,gf,KL.l,KL.f,sigma2)
+      res = update_res(res,k,El,El2,Ef,Ef2,gl,gf,KL.l,KL.f,sigma2,0)
       print('factor zeroed out')
       break
     }
 
-    res = update_res(res,k,El,El2,Ef,Ef2,gl,gf,KL.l,KL.f,sigma2)
+    res = update_res(res,k,El,El2,Ef,Ef2,gl,gf,KL.l,KL.f,sigma2,0)
     # evaluate objective function
     obj[i+1] = calc_objective(Y,a,b,res,S2)
     if(verbose){

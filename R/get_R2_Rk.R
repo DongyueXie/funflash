@@ -21,6 +21,15 @@ get_Rk = function(Y,energy,Fe,a,b,EL,EF){
 }
 
 #'@description get the residual for model fitting, kth factor and loadings
+get_Rk0 = function(Y,a,b,EL,EF){
+  if(is.null(EL)&is.null(EF)){
+    return(Y)
+  }else{
+    return(Y - tcrossprod(a*EL,b*EF))
+  }
+}
+
+#'@description get the residual for model fitting, kth factor and loadings
 #'@param Y original Y in the data space
 #'@param p the ncol of original data Y
 #'@param k number of factors added so far
