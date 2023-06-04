@@ -1,6 +1,6 @@
 
 #'Initialize a rank 1 decomposition
-init_fl = function(Y,init_fn){
+init_fl = function(Y,init_fn,k_remain=1){
   if(init_fn=='udv_si'){
     out = udv_si(Y,1)
   }
@@ -14,7 +14,7 @@ init_fl = function(Y,init_fn){
     out = udv_random(Y,1)
   }
   if(init_fn == 'nnmf_r1'){
-    out = nnmf_r1(Y,1)
+    out = nnmf_r1(Y,k_remain)
   }
 
   #out = do.call(init_fn,list(Y,1))
@@ -22,9 +22,9 @@ init_fl = function(Y,init_fn){
 }
 
 nnmf_r1 = function(Y,K = 1){
-  res = NNLM::nnmf(Y,K,loss='mse',verbose = 0)
-  u = as.vector(res$W)
-  v = as.vector(res$H)
+  res = NNLM::nnmf(Y,K,loss='mse',method = 'scd',verbose = 0)
+  u = as.vector(res$W[,1])
+  v = as.vector(res$H[1,])
   d = sum(v) * sum(u)
   u = u/sum(u)
   v = v/sum(v)

@@ -15,15 +15,17 @@ scaledflash_rank1 = function(Rk,
                           verbose,
                           init_fn,
                           Y,
-                          S2.type){
+                          S2.type,
+                          k_remain=1){
 
   #s = res$s
   # initialize l and f
   n = nrow(Rk)
   p = ncol(Rk)
-  init = init_fl(Rk,init_fn)
+  init = init_fl(Rk,init_fn,k_remain)
   El = init$u*sqrt(init$d[1])/a
   Ef = init$v*sqrt(init$d[1])/b
+
   El2 = El^2
   Ef2 = Ef^2
   gl = list()
@@ -32,6 +34,8 @@ scaledflash_rank1 = function(Rk,
   KL.f = 0
   res = update_res(res,k,El,El2,Ef,Ef2,gl,gf,KL.l,KL.l,fe=0)
   sigma2 = res$sigma2
+
+
 
   obj = -Inf
   for(i in 1:maxiter){
@@ -63,6 +67,7 @@ scaledflash_rank1 = function(Rk,
       break
     }
 
+    #browser()
     # update f
     sf = (b^2*colSums(tcrossprod(a^2*El2,rep(1,p))/(sigma2+S2)))^(-0.5)
     xf = sf^2*b*colSums(Rk*tcrossprod(a*El,rep(1,p))/(sigma2+S2))

@@ -5,7 +5,8 @@ biwhitening = function(Y){
   out = Sinkhorn_Knopp(Y)
   u = sqrt(out$x)
   v = sqrt(out$y)
-  Y_tilde = sqrt(u) * Y%*%diag(v)
+  # Y_tilde = sqrt(u) * Y%*%diag(v)
+  Y_tilde = u * Y%*%diag(v)
   return(list(Y = Y_tilde,u=u,v=v))
 }
 

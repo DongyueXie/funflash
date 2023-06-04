@@ -56,6 +56,7 @@ scaledflash = function(Y,
     if(verbose){
       print(paste("Fitting dimension ", k))
     }
+    k_remain = Kmax - k + 1
     res = scaledflash_rank1(Rk,
                          a = a,
                          b = b,
@@ -70,7 +71,8 @@ scaledflash = function(Y,
                          verbose=verbose,
                          init_fn=init_fn,
                          Y=Y,
-                         S2.type = S2.type)
+                         S2.type = S2.type,
+                         k_remain=k_remain)
     #est_var=est_var)
     if(nullcheck){
       if(verbose){

@@ -182,3 +182,69 @@ ebnm_pl = function(x, s, ebnm_param, output = NULL) {
               penloglik = res$log_likelihood))
 }
 
+
+ebnm_dwt_haaar = function(x, s, g_init=NULL, fix_g=F, output){
+  ebpmf:::ebnm_dwt(x, s, g_init, fix_g,filter.number=1,family="DaubExPhase")
+}
+
+# @title EBNM using wavelet prior
+ebnm_smooth = function (x, s, ebnm_param, output = NULL)
+{
+  if (identical(output, "post_sampler")) {
+    ebnm_param$output = "posterior_sampler"
+  }
+  else {
+    ebnm_param$output = c("posterior_mean", "posterior_second_moment",
+                          "fitted_g", "log_likelihood")
+  }
+  if (!is.null(ebnm_param$g)) {
+    ebnm_param$g_init = ebnm_param$g
+    ebnm_param$g = NULL
+  }
+  if (!is.null(ebnm_param$fixg)) {
+    ebnm_param$fix_g = ebnm_param$fixg
+    ebnm_param$fixg = NULL
+  }
+  res = do.call(ebnm_dwt_haaar, c(list(x = as.vector(x),
+                                              s = as.vector(s)), ebnm_param))
+  if (identical(output, "post_sampler")) {
+    out = res$posterior_sampler
+  }
+  else {
+    out = list(postmean = res$posterior$mean, postmean2 = res$posterior$second_moment,
+               fitted_g = res$fitted_g, penloglik = res$log_likelihood)
+  }
+  return(out)
+}
+
+
+
+# @title EBNM using wavelet prior
+ebnm_smooth_ndwt = function (x, s, ebnm_param, output = NULL)
+{
+  if (identical(output, "post_sampler")) {
+    ebnm_param$output = "posterior_sampler"
+  }
+  else {
+    ebnm_param$output = c("posterior_mean", "posterior_second_moment",
+                          "fitted_g", "log_likelihood")
+  }
+  if (!is.null(ebnm_param$g)) {
+    ebnm_param$g_init = ebnm_param$g
+    ebnm_param$g = NULL
+  }
+  if (!is.null(ebnm_param$fixg)) {
+    ebnm_param$fix_g = ebnm_param$fixg
+    ebnm_param$fixg = NULL
+  }
+  res = do.call(ebpmf::ebnm_ndwt, c(list(x = as.vector(x),
+                                       s = as.vector(s)), ebnm_param))
+  if (identical(output, "post_sampler")) {
+    out = res$posterior_sampler
+  }
+  else {
+    out = list(postmean = res$posterior$mean, postmean2 = res$posterior$second_moment,
+               fitted_g = res$fitted_g, penloglik = res$log_likelihood)
+  }
+  return(out)
+}
